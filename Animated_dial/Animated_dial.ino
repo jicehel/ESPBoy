@@ -17,6 +17,7 @@
 
 // Created by Bodmer 17/3/20 as an example to the TFT_eSPI library:
 // https://github.com/Bodmer/TFT_eSPI
+// updated by jicehel for the ESPboy
 
 #define NEEDLE_LENGTH 35  // Visible length
 #define NEEDLE_WIDTH   5  // Width of needle - make it an odd number
@@ -81,7 +82,16 @@ void setup()   {
   uint16_t bg_color = myESPboy.tft.readPixel(DIAL_CENTRE_X, DIAL_CENTRE_Y); // Get colour from dial centre
   spr.fillSprite(bg_color);
   spr.setTextColor(TFT_WHITE, bg_color);
+ 
+  // 
+  // setTextDatum : string alignment
+  //
+  // TL_DATUM = Top left;    TC_DATUM = Top centre;    TR_DATUM = Top right
+  // ML_DATUM = Middle left; MC_DATUM = Middle centre; MR_DATUM = Middle right
+  // BL_DATUM = Bottom left; BC_DATUM = Bottom centre; BR_DATUM = Bottom right
+  
   spr.setTextDatum(MC_DATUM);
+ 
   spr.setTextPadding(spr_width);
   spr.drawNumber(0, spr_width/2, 0);
   spr.pushSprite(DIAL_CENTRE_X - spr_width / 2, DIAL_CENTRE_Y - spr.fontHeight() / 2);

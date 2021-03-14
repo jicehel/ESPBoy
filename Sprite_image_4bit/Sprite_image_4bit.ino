@@ -32,7 +32,7 @@
 #define WIDTH  80
 #define HEIGHT 30
 
-#include "sample_images.h"
+#include "Image.h"
 #include "ESPboyInit.h"
 
 ESPboyInit myESPboy;       // Invoke custom library
@@ -46,13 +46,13 @@ byte state = 0;
 int rloop = 0;
 int incr = 1;
 
+int16_t cx, cy=0, dx=1, dy=1;
 uint16_t cmap[16];
 
 void setup()
 {
 
-  delay(50);
-  
+ 
   //Set up the display
   myESPboy.begin("Sprite_image_4bit");
   
@@ -65,32 +65,49 @@ void setup()
   myESPboy.tft.fillScreen(TFT_BLACK);
   
   // push the image - only need to do this once.
-  spr.pushImage(2, 2, WIDTH, HEIGHT, (uint16_t *)stars);
+  spr.pushImage(0, 0, WIDTH, HEIGHT, (uint16_t *)Image);
 
-  for (int i = 0; i < 16; i++)
+  // set initial position of the sprite
+  cx = (myESPboy.tft.width()- WIDTH) / 2;
+  cy = (myESPboy.tft.height()- HEIGHT) / 2;
+
+  // set move initial direction
+  dx=1; 
+  dy=1;
+
+  cmap[0] = 0;
+  for (int i = 1; i < 16; i++)
     cmap[i] = rainbow();
+    
 }
+
 
 void loop(void)
 {
   // create a palette with the defined colors and push it.  
-  spr.createPalette(cmap, 16);
-  spr.pushSprite((myESPboy.tft.width()- WIDTH) / 2, (myESPboy.tft.height()- HEIGHT) / 2);
+  spr.createPalette(cmap);
+  spr.pushSprite(cx, cy);
   
   // update the colors
-  for (int i = 0; i < 15; i++) {
+  for (int i = 1; i < 15; i++) 
     cmap[i] = cmap[i + 1];
-  }
-  if (incr == 2) {
+ 
+  if (incr == 2)
     (void)rainbow();  // skip alternate steps to go faster
-  }
+  
   cmap[15] = rainbow();
   rloop += incr;
   if (rloop > 0xc0) {
     incr = incr == 2 ? 1 : 2;
     rloop = 0;
-    
   }
+
+  // update position
+  cx+=dx;
+  cy+=dy;
+  if(cx > 128 - WIDTH  || cx < 1) dx=-dx;
+  if(cy > 128 - HEIGHT || cy < 1) dy=-dy;
+  
   delay(DELAY);
 
 }

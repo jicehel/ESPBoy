@@ -9,7 +9,7 @@
   This prog will display a map
   on the screen (128 x 128 pixels)
   composed of a combination
-  of 10 tiles of 16 x 16 pixels
+  of 16 tiles of 8 x 8 pixels
   
 */
 
@@ -64,7 +64,7 @@ void drawmap() {
   uint8_t nb;
   for(uint8_t i=0; i<Y_TILES; i++) {
     for(uint8_t j=0; j<X_TILES; j++) { 
-      nb = table[j][i] - '0';
+      nb = table[i][j] - '0';
       if (nb > 10) nb = nb - 7;
       spr.pushSprite(j * WIDTH_TILE, i * HEIGHT_TILE, (nb - 1) * WIDTH_TILE, 0, WIDTH_TILE, HEIGHT_TILE);
     } 
@@ -77,10 +77,8 @@ void setup(){
   spr.setColorDepth(4);
   spr.createPalette(bit4palette); 
   spr.createSprite(Tileset_size, HEIGHT_TILE); // Create a sprite of defined size
-  
-  spr.pushImage(0, 0, Tileset_size, HEIGHT_TILE, (uint16_t *)tileset, 4);
-  spr.pushSprite(0,0);
-  delay(DELAY*100);
+  spr.pushImage(0, 0, Tileset_size, HEIGHT_TILE, (uint16_t *)tileset, 16);
+  // spr.pushSprite(0,0);
 }
 
 
